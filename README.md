@@ -1,1 +1,1 @@
-# ARMTemplates
+# ARM Templates
