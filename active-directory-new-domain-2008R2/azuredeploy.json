@@ -24,7 +24,7 @@
         },
         "dnsPrefix": {
             "type": "string",
-            "defaultValue": "ts",
+            "defaultValue": "t1s",
             "metadata": {
                 "description": "The DNS prefix for the public IP address used by the Load Balancer"
             }
@@ -77,9 +77,6 @@
                 "dnsSettings": {
                     "domainNameLabel": "[parameters('dnsPrefix')]"
                 }
-            },
-            "tags": {
-                "script" : "Github/bpnkul"
             }
         },
         {
@@ -93,9 +90,6 @@
             },
             "sku": {
                 "name": "Aligned"
-            },
-            "tags": {
-                "script" : "Github/bpnkul"
             }
         },
         {
@@ -122,9 +116,6 @@
                         "value": "[variables('adSubnetAddressPrefix')]"
                     }
                 }
-            },
-            "tags": {
-                "script" : "Github/bpnkul"
             }
         },
         {
