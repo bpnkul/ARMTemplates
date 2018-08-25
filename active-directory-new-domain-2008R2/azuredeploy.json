@@ -253,11 +253,11 @@
                             "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('adNicName'))]"
                         }
                     ]
-                },
-                "copy": {
-                    "name": "vmcopy",
-                    "count": 2
                 }
+            },
+            "copy": {
+                "name": "vmcopy",
+                "count": 2
             },
             "resources": [
                 {
