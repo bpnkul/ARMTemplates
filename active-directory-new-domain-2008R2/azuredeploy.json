@@ -4,6 +4,7 @@
     "parameters": {
         "adminUsername": {
             "type": "string",
+            "defaultValue": "testsystemadmin",
             "metadata": {
                 "description": "The name of the administrator account of the new VM and domain"
             }
@@ -16,12 +17,14 @@
         },
         "domainName": {
             "type": "string",
+            "defaultValue": "TESTSYS",
             "metadata": {
                 "description": "The FQDN of the Active Directory Domain to be created"
             }
         },
         "dnsPrefix": {
             "type": "string",
+            "defaultValue": "T313S",
             "metadata": {
                 "description": "The DNS prefix for the public IP address used by the Load Balancer"
             }
@@ -49,50 +52,57 @@
         }
     },
     "variables": {
-        "virtualNetworkName": "adVNET",
+        "virtualNetworkName": "testVNET",
         "virtualNetworkAddressRange": "10.0.0.0/16",
         "adLBFE": "LBFE",
         "adLBBE": "LBBE",
-        "adRDPNAT": "adRDP",
-        "adNicName": "adNic",
+        "adRDPNAT": "testRDP",
+        "adNicName": "testNic",
         "adNicIPAddress": "10.0.0.4",
-        "adVMName": "adVM",
-        "adSubnetName": "adSubnet",
+        "adVMName": "testVM",
+        "adSubnetName": "testSubnet",
         "adSubnetAddressPrefix": "10.0.0.0/24",
-        "publicIPAddressName": "adPublicIP",
-        "adAvailabilitySetName": "adAvailabiltySet",
-        "adLBName": "adLoadBalancer"
+        "publicIPAddressName": "testPublicIP",
+        "adAvailabilitySetName": "testAvailabiltySet",
+        "adLBName": "testLoadBalancer"
     },
+    "functions": {  },
     "resources": [
         {
+            "apiVersion": "2016-03-30",
             "type": "Microsoft.Network/publicIPAddresses",
             "name": "[variables('publicIPAddressName')]",
-            "apiVersion": "2016-03-30",
             "location": "[parameters('location')]",
             "properties": {
                 "publicIPAllocationMethod": "Dynamic",
                 "dnsSettings": {
                     "domainNameLabel": "[parameters('dnsPrefix')]"
                 }
+            },
+            "tags": {
+                "script" : "Github/bpnkul"
             }
         },
         {
             "apiVersion": "2017-03-30",
             "type": "Microsoft.Compute/availabilitySets",
-            "location": "[parameters('location')]",
             "name": "[variables('adAvailabilitySetName')]",
+            "location": "[parameters('location')]",
             "properties": {
                 "PlatformUpdateDomainCount": 20,
                 "PlatformFaultDomainCount": 2
             },
             "sku": {
                 "name": "Aligned"
+            },
+            "tags": {
+                "script" : "Github/bpnkul"
             }
         },
         {
+            "apiVersion": "2016-02-01",
             "type": "Microsoft.Resources/deployments",
             "name": "VNet",
-            "apiVersion": "2016-02-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -113,6 +123,9 @@
                         "value": "[variables('adSubnetAddressPrefix')]"
                     }
                 }
+            },
+            "tags": {
+                "script" : "Github/bpnkul"
             }
         },
         {
@@ -218,9 +231,9 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "cloud-infrastructure-services",
-                        "offer": "ad-dc-2016",
-                        "sku": "ad-dc-2016",
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2008-R2-SP1",
                         "version": "latest"
                     },
                     "osDisk": {
@@ -228,7 +241,7 @@
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
-                            "storageAccountType": "Standard_LRS"
+                            "storageAccountType": "Premium_LRS"
                         }
                     },
                     "dataDisks": [
@@ -238,7 +251,7 @@
                             "createOption": "Empty",
                             "diskSizeGB": 20,
                             "managedDisk": {
-                                "storageAccountType": "Standard_LRS"
+                                "storageAccountType": "Premium_LRS"
                             },
                             "lun": 0
                         }
@@ -250,6 +263,10 @@
                             "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('adNicName'))]"
                         }
                     ]
+                },
+                "copy": {
+                    "name": "vmcopy",
+                    "count": 2
                 }
             },
             "resources": [
@@ -320,5 +337,6 @@
                 }
             }
         }
-    ]
+    ],
+    "outputs": {  }
 }
