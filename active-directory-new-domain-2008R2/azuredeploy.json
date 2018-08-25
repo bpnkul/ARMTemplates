@@ -202,11 +202,6 @@
                 "[resourceId('Microsoft.Compute/availabilitySets', variables('adAvailabilitySetName'))]",
                 "[resourceId('Microsoft.Network/loadBalancers', variables('adLBName'))]"
             ],
-            "plan": {
-                "name": "ad-dc-2016",
-                "publisher": "cloud-infrastructure-services",
-                "product": "ad-dc-2016"
-            },
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "Standard_B2ms"
