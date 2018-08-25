@@ -24,7 +24,7 @@
         },
         "dnsPrefix": {
             "type": "string",
-            "defaultValue": "T313S",
+            "defaultValue": "t313s",
             "metadata": {
                 "description": "The DNS prefix for the public IP address used by the Load Balancer"
             }
@@ -66,7 +66,6 @@
         "adAvailabilitySetName": "testAvailabiltySet",
         "adLBName": "testLoadBalancer"
     },
-    "functions": {  },
     "resources": [
         {
             "apiVersion": "2016-03-30",
@@ -337,6 +336,5 @@
                 }
             }
         }
-    ],
-    "outputs": {  }
+    ]
 }
