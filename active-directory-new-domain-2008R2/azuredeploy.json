@@ -255,10 +255,6 @@
                     ]
                 }
             },
-            "copy": {
-                "name": "vmcopy",
-                "count": 2
-            },
             "resources": [
                 {
                     "type": "extensions",
