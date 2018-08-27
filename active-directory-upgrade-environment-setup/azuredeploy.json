@@ -10,7 +10,8 @@
             }
         },
         "adminPassword": {
-            "type": "securestring",
+            "type": "string",
+            "defaultValue": "BlackSwan$2067",            
             "metadata": {
                 "description": "The password for the administrator account of the new VM and domain"
             }
@@ -120,29 +121,6 @@
             }
         },
         {
-            "type": "Microsoft.Network/networkInterfaces",
-            "name": "[variables('adNicNameVM2')]",
-            "apiVersion": "2016-03-30",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/VNet"            
-            ],
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "privateIPAllocationMethod": "Static",
-                            "privateIPAddress": "[variables('adNicIPAddressVM2')]",
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('adSubnetName'))]"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
             "type": "Microsoft.Resources/deployments",
             "name": "UpdateVNetDNS",
             "apiVersion": "2016-02-01",
@@ -167,8 +145,7 @@
                     },
                     "DNSServerAddress": {
                         "value": [
-                            "[variables('adNicIPAddressVM1')]",
-                            "[variables('adNicIPAddressVM2')]"
+                            "[variables('adNicIPAddressVM1')]"
                         ]
                     }
                 }
