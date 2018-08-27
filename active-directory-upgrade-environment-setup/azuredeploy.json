@@ -74,7 +74,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 14,
-      "defaultValue": "GEN-UNIQUE-12",
+      "defaultValue": "dns",
       "metadata": {
         "description": "Globally unique DNS prefix for the Public IPs used to access the Virtual Machines"
       }
