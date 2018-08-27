@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "virtualMachineAdminUserName": {
-      "defaultValue": "azadmin",
+      "defaultValue": "testsystemadmin",
       "type": "string",
       "metadata": {
         "description": "Administrator Username for the local admin account"
@@ -15,8 +15,15 @@
         "description": "Administrator password for the local admin account"
       }
     },
+    "domainName": {
+      "type": "string",
+      "defaultValue": "TESTSYS",
+      "metadata": {
+          "description": "The FQDN of the Active Directory Domain to be created"
+      }
+    },
     "virtualMachineNamePrefix": {
-      "defaultValue": "MyVM0",
+      "defaultValue": "testVM",
       "type": "string",
       "maxLength": 15,
       "metadata": {
@@ -51,12 +58,13 @@
         "description": "Operating System of the Server"
       },
       "allowedValues": [
+        "Server2008R2",
         "Server2012R2",
         "Server2016"
       ]
     },
     "availabilitySetName": {
-      "defaultValue": "MyAvailabilitySet",
+      "defaultValue": "testAvailabilitySet",
       "type": "string",
       "metadata": {
         "description": "Availability Set Name where the VM will be placed"
@@ -80,12 +88,17 @@
     }
   },
   "variables": {
-    "myVNETName": "myVNET",
+    "myVNETName": "testVNET",
     "myVNETPrefix": "10.0.0.0/16",
     "myVNETSubnet1Name": "Subnet1",
     "myVNETSubnet1Prefix": "10.0.0.0/24",
     "diagnosticStorageAccountName": "[concat('diagst', uniqueString(resourceGroup().id))]",
     "operatingSystemValues": {
+      "Server2008R2": {
+        "PublisherValue": "MicrosoftWindowsServer",
+        "OfferValue": "WindowsServer",
+        "SkuValue": "2008-R2-SP1"
+      },
       "Server2012R2": {
         "PublisherValue": "MicrosoftWindowsServer",
         "OfferValue": "WindowsServer",
