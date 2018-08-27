@@ -60,8 +60,7 @@
         "adNicName": "testNic",
         "adNicIPAddress": "10.0.0.4",
         "adVMName": "testVM",
-        "publicIPAddressName": "testPublicIP",
-        "adAvailabilitySetName": "testAvailabiltySet",
+        "publicIPAddressName": "testPublicIP"
     },
     "resources": [
          {
@@ -89,6 +88,56 @@
                     }
                 }
             }
-        }
+        },
+        {
+            "apiVersion": "2016-02-01",
+            "type": "Microsoft.Resources/deployments",
+            "name": "VNet",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'), '/nestedtemplates/vm.json', parameters('_artifactsLocationSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                         
+                    "dnsPrefix": {
+                        "value": "[parameters('dnsPrefix')]"
+                    },                
+                    "vmNicName": {
+                        "value": "[variables('adNicName')]"
+                    },               
+                    "subnetRange": {
+                        "value": "[variables('subnetRange')]"
+                    },               
+                    "vmNicIPAddress": {
+                        "value": "[variables('adNicIPAddress')]"
+                    },               
+                    "vmName": {
+                        "value": "[variables('adVMName')]"
+                    },       
+                    "publicIPAddressName": {
+                        "value": "[variables('publicIPAddressName')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[variables('virtualNetworkName')]"
+                    },                           
+                    "subnetName": {
+                        "value": "[variables('subnetName')]"
+                    },                          
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }                   
+                },
+                "dependsOn": [
+                    "Microsoft.Resources/deployments/VNet"
+                  ]
+            }
+        }       
     ]
 }
