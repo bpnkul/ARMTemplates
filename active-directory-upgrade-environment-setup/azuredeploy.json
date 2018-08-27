@@ -93,15 +93,15 @@
             "apiVersion": "2016-02-01",
             "type": "Microsoft.Resources/deployments",
             "name": "VM2008",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'VNet')]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
                     "uri": "[concat(parameters('_artifactsLocation'), '/nestedtemplates/vm.json', parameters('_artifactsLocationSasToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
-                "dependsOn": [
-                    "[resourceId('Microsoft.Resources/deployments', 'VNet')]"
-                ],
                 "parameters": {
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
