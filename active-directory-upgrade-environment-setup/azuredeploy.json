@@ -111,10 +111,7 @@
                     },                
                     "vmNicName": {
                         "value": "[variables('adNicName')]"
-                    },               
-                    "subnetRange": {
-                        "value": "[variables('subnetRange')]"
-                    },               
+                    },                         
                     "vmNicIPAddress": {
                         "value": "[variables('adNicIPAddress')]"
                     },               
