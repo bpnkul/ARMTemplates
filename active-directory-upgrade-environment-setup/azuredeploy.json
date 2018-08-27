@@ -132,7 +132,7 @@
                     }                   
                 },
                 "dependsOn": [
-                    "Microsoft.Resources/deployments/VNet"
+                    "[resourceId('Microsoft.Resources/deployments', 'VNet')]"
                   ]
             }
         }       
