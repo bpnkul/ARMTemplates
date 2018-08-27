@@ -34,7 +34,7 @@
         "metadata": {
           "description": "The location of resources, such as templates and DSC modules, that the template depends on"
         },
-        "defaultValue": "https://raw.githubusercontent.com/bpnkul/ARMTemplates/master/active-directory-new-domain-2008R2"
+        "defaultValue": "https://raw.githubusercontent.com/bpnkul/ARMTemplates/master/active-directory-upgrade-environment setup"
       },
         "_artifactsLocationSasToken": {
             "type": "securestring",
@@ -54,9 +54,6 @@
     "variables": {
         "virtualNetworkName": "testVNET",
         "virtualNetworkAddressRange": "10.0.0.0/16",
-        "adLBFE": "LBFE",
-        "adLBBE": "LBBE",
-        "adRDPNAT": "testRDP",
         "adNicNameVM1": "testNicVM1",
         "adNicNameVM2": "testNicVM2",
         "adNicNameVM3": "testNicVM3",
@@ -70,37 +67,9 @@
         "adVMNameVM3": "TESTDCVM3",
         "adVMNameVM4": "TESTDCVM4",
         "adSubnetName": "testSubnet",
-        "adSubnetAddressPrefix": "10.0.0.0/24",
-        "publicIPAddressName": "testPublicIP",
-        "adAvailabilitySetName": "testAvailabiltySet",
-        "adLBName": "testLoadBalancer"
+        "adSubnetAddressPrefix": "10.0.0.0/24"
     },
     "resources": [
-        {
-            "apiVersion": "2016-03-30",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "name": "[variables('publicIPAddressName')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "publicIPAllocationMethod": "Dynamic",
-                "dnsSettings": {
-                    "domainNameLabel": "[parameters('dnsPrefix')]"
-                }
-            }
-        },
-        {
-            "apiVersion": "2017-03-30",
-            "type": "Microsoft.Compute/availabilitySets",
-            "name": "[variables('adAvailabilitySetName')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "PlatformUpdateDomainCount": 20,
-                "PlatformFaultDomainCount": 2
-            },
-            "sku": {
-                "name": "Aligned"
-            }
-        },
         {
             "apiVersion": "2016-02-01",
             "type": "Microsoft.Resources/deployments",
@@ -128,53 +97,12 @@
             }
         },
         {
-            "type": "Microsoft.Network/loadBalancers",
-            "name": "[variables('adLBName')]",
-            "apiVersion": "2016-03-30",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
-            ],
-            "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "[variables('adLBFE')]",
-                        "properties": {
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
-                            }
-                        }
-                    }
-                ],
-                "backendAddressPools": [
-                    {
-                        "name": "[variables('adLBBE')]"
-                    }
-                ],
-                "inboundNatRules": [
-                    {
-                        "name": "[variables('adRDPNAT')]",
-                        "properties": {
-                            "frontendIPConfiguration": {
-                                "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations', variables('adLBName'), variables('adLBFE'))]"
-                            },
-                            "protocol": "tcp",
-                            "frontendPort": 3389,
-                            "backendPort": 3389,
-                            "enableFloatingIP": false
-                        }
-                    }
-                ]
-            }
-        },
-        {
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[variables('adNicNameVM1')]",
             "apiVersion": "2016-03-30",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "Microsoft.Resources/deployments/VNet",
-                "[resourceId('Microsoft.Network/loadBalancers', variables('adLBName'))]"
+                "Microsoft.Resources/deployments/VNet"            
             ],
             "properties": {
                 "ipConfigurations": [
@@ -185,17 +113,7 @@
                             "privateIPAddress": "[variables('adNicIPAddressVM1')]",
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('adSubnetName'))]"
-                            },
-                            "loadBalancerBackendAddressPools": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', variables('adLBName'), variables('adLBBE'))]"
-                                }
-                            ],
-                            "loadBalancerInboundNatRules": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules', variables('adLBName'), variables('adRDPNAT'))]"
-                                }
-                            ]
+                            }
                         }
                     }
                 ]
@@ -207,8 +125,7 @@
             "apiVersion": "2016-03-30",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "Microsoft.Resources/deployments/VNet",
-                "[resourceId('Microsoft.Network/loadBalancers', variables('adLBName'))]"
+                "Microsoft.Resources/deployments/VNet"            
             ],
             "properties": {
                 "ipConfigurations": [
@@ -219,17 +136,7 @@
                             "privateIPAddress": "[variables('adNicIPAddressVM2')]",
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('adSubnetName'))]"
-                            },
-                            "loadBalancerBackendAddressPools": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', variables('adLBName'), variables('adLBBE'))]"
-                                }
-                            ],
-                            "loadBalancerInboundNatRules": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules', variables('adLBName'), variables('adRDPNAT'))]"
-                                }
-                            ]
+                            }
                         }
                     }
                 ]
@@ -241,8 +148,7 @@
             "apiVersion": "2016-03-30",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "Microsoft.Resources/deployments/VNet",
-                "[resourceId('Microsoft.Network/loadBalancers', variables('adLBName'))]"
+                "Microsoft.Resources/deployments/VNet"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -253,17 +159,7 @@
                             "privateIPAddress": "[variables('adNicIPAddressVM3')]",
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('adSubnetName'))]"
-                            },
-                            "loadBalancerBackendAddressPools": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', variables('adLBName'), variables('adLBBE'))]"
-                                }
-                            ],
-                            "loadBalancerInboundNatRules": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules', variables('adLBName'), variables('adRDPNAT'))]"
-                                }
-                            ]
+                            }
                         }
                     }
                 ]
@@ -275,8 +171,7 @@
             "apiVersion": "2016-03-30",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "Microsoft.Resources/deployments/VNet",
-                "[resourceId('Microsoft.Network/loadBalancers', variables('adLBName'))]"
+                "Microsoft.Resources/deployments/VNet"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -287,17 +182,7 @@
                             "privateIPAddress": "[variables('adNicIPAddressVM4')]",
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('adSubnetName'))]"
-                            },
-                            "loadBalancerBackendAddressPools": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', variables('adLBName'), variables('adLBBE'))]"
-                                }
-                            ],
-                            "loadBalancerInboundNatRules": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules', variables('adLBName'), variables('adRDPNAT'))]"
-                                }
-                            ]
+                            }
                         }
                     }
                 ]
@@ -309,16 +194,11 @@
             "apiVersion": "2017-03-30",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', variables('adNicNameVM1'))]",
-                "[resourceId('Microsoft.Compute/availabilitySets', variables('adAvailabilitySetName'))]",
-                "[resourceId('Microsoft.Network/loadBalancers', variables('adLBName'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('adNicNameVM1'))]"
             ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "Standard_B2ms"
-                },
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('adAvailabilitySetName'))]"
                 },
                 "osProfile": {
                     "computerName": "[variables('adVMNameVM1')]",
@@ -368,16 +248,11 @@
             "apiVersion": "2017-03-30",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', variables('adNicNameVM2'))]",
-                "[resourceId('Microsoft.Compute/availabilitySets', variables('adAvailabilitySetName'))]",
-                "[resourceId('Microsoft.Network/loadBalancers', variables('adLBName'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('adNicNameVM2'))]"
             ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "Standard_B2ms"
-                },
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('adAvailabilitySetName'))]"
                 },
                 "osProfile": {
                     "computerName": "[variables('adVMNameVM2')]",
@@ -427,16 +302,11 @@
             "apiVersion": "2017-03-30",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', variables('adNicNameVM3'))]",
-                "[resourceId('Microsoft.Compute/availabilitySets', variables('adAvailabilitySetName'))]",
-                "[resourceId('Microsoft.Network/loadBalancers', variables('adLBName'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('adNicNameVM3'))]"
             ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "Standard_B2ms"
-                },
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('adAvailabilitySetName'))]"
                 },
                 "osProfile": {
                     "computerName": "[variables('adVMNameVM3')]",
@@ -486,16 +356,11 @@
             "apiVersion": "2017-03-30",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', variables('adNicNameVM4'))]",
-                "[resourceId('Microsoft.Compute/availabilitySets', variables('adAvailabilitySetName'))]",
-                "[resourceId('Microsoft.Network/loadBalancers', variables('adLBName'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('adNicNameVM4'))]"
             ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "Standard_B2ms"
-                },
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('adAvailabilitySetName'))]"
                 },
                 "osProfile": {
                     "computerName": "[variables('adVMNameVM4')]",

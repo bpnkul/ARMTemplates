@@ -1,0 +1,819 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_test2_name": {
+            "defaultValue": "test2",
+            "type": "String"
+        },
+        "dnszones_afipocdc.com_name": {
+            "defaultValue": "afipocdc.com",
+            "type": "String"
+        },
+        "virtualMachines_AFIPOCDC_name": {
+            "defaultValue": "AFIPOCDC",
+            "type": "String"
+        },
+        "networkInterfaces_test2614_name": {
+            "defaultValue": "test2614",
+            "type": "String"
+        },
+        "publicIPAddresses_test2_ip_name": {
+            "defaultValue": "test2-ip",
+            "type": "String"
+        },
+        "NS_@_name": {
+            "defaultValue": "@",
+            "type": "String"
+        },
+        "SOA_@_name": {
+            "defaultValue": "@",
+            "type": "String"
+        },
+        "TXT_@_name": {
+            "defaultValue": "@",
+            "type": "String"
+        },
+        "virtualNetworks_AFIPOCDCVNET_name": {
+            "defaultValue": "AFIPOCDCVNET",
+            "type": "String"
+        },
+        "networkInterfaces_AFIPOCDCVMNic_name": {
+            "defaultValue": "AFIPOCDCVMNic",
+            "type": "String"
+        },
+        "networkSecurityGroups_test2_nsg_name": {
+            "defaultValue": "test2-nsg",
+            "type": "String"
+        },
+        "storageAccounts_afipocrgdiag123_name": {
+            "defaultValue": "afipocrgdiag123",
+            "type": "String"
+        },
+        "networkSecurityGroups_AFIPOCDCNSG_name": {
+            "defaultValue": "AFIPOCDCNSG",
+            "type": "String"
+        },
+        "publicIPAddresses_AFIPOCDCPublicIP_name": {
+            "defaultValue": "AFIPOCDCPublicIP",
+            "type": "String"
+        },
+        "schedules_shutdown_computevm_afipocdc_name": {
+            "defaultValue": "shutdown-computevm-afipocdc",
+            "type": "String"
+        },
+        "virtualMachines_AFIPOCDC_id": {
+            "defaultValue": "/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Compute/disks/AFIPOCDC_OsDisk_1_7d4e13d1289948a8add50eca685ab2e5",
+            "type": "String"
+        },
+        "virtualMachines_test2_id": {
+            "defaultValue": "/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Compute/disks/test2_OsDisk_1_33cb9109268040a483cb9e146021c27f",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Compute/virtualMachines/AFIPOCDC'.",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachines_AFIPOCDC_name')]",
+            "apiVersion": "2017-12-01",
+            "location": "westus",
+            "tags": {
+                "owner": "Bipin Kulkarni"
+            },
+            "scale": null,
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_B2s"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2016-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[concat(parameters('virtualMachines_AFIPOCDC_name'),'_OsDisk_1_7d4e13d1289948a8add50eca685ab2e5')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[parameters('virtualMachines_AFIPOCDC_id')]"
+                        },
+                        "diskSizeGB": 127
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_AFIPOCDC_name')]",
+                    "adminUsername": "bipink",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_AFIPOCDCVMNic_name'))]"
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_AFIPOCDCVMNic_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Compute/virtualMachines/test2'.",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachines_test2_name')]",
+            "apiVersion": "2017-12-01",
+            "location": "westus",
+            "scale": null,
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_B2ms"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2016-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[concat(parameters('virtualMachines_test2_name'),'_OsDisk_1_33cb9109268040a483cb9e146021c27f')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[parameters('virtualMachines_test2_id')]"
+                        },
+                        "diskSizeGB": 127
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_test2_name')]",
+                    "adminUsername": "testsystemadmin",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_test2614_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https', '://', parameters('storageAccounts_afipocrgdiag123_name'), '.blob.core.windows.net', '/')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_test2614_name'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_afipocrgdiag123_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourcegroups/afipoc_rg/providers/microsoft.devtestlab/schedules/shutdown-computevm-afipocdc'.",
+            "type": "microsoft.devtestlab/schedules",
+            "name": "[parameters('schedules_shutdown_computevm_afipocdc_name')]",
+            "apiVersion": "2016-05-15",
+            "location": "westus",
+            "scale": null,
+            "properties": {
+                "status": "Disabled",
+                "taskType": "ComputeVmShutdownTask",
+                "dailyRecurrence": {
+                    "time": "2300"
+                },
+                "timeZoneId": "Pacific Standard Time",
+                "notificationSettings": {
+                    "status": "Disabled",
+                    "timeInMinutes": 30,
+                    "webhookUrl": ""
+                },
+                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_AFIPOCDC_name'))]",
+                "provisioningState": "Succeeded",
+                "uniqueIdentifier": "2257cfe5-cb1d-4e9f-8f8e-403b5c24bdea"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_AFIPOCDC_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/afipoc_rg/providers/Microsoft.Network/dnszones/afipocdc.com'.",
+            "type": "Microsoft.Network/dnszones",
+            "name": "[parameters('dnszones_afipocdc.com_name')]",
+            "apiVersion": "2017-10-01",
+            "location": "global",
+            "tags": {},
+            "scale": null,
+            "properties": {
+                "maxNumberOfRecordSets": 5000,
+                "nameServers": [
+                    "ns1-01.azure-dns.com.",
+                    "ns2-01.azure-dns.net.",
+                    "ns3-01.azure-dns.org.",
+                    "ns4-01.azure-dns.info."
+                ],
+                "numberOfRecordSets": 3,
+                "zoneType": "Public"
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Network/networkInterfaces/AFIPOCDCVMNic'.",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('networkInterfaces_AFIPOCDCVMNic_name')]",
+            "apiVersion": "2018-02-01",
+            "location": "westus",
+            "tags": {
+                "owner": "Bipin Kulkarni"
+            },
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "4c63c0f1-5f83-4d65-83fe-041c4e7996de",
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfigAFIPOCDC",
+                        "etag": "W/\"5805b291-31bc-494a-aa5a-8234697079a7\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.0.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_AFIPOCDCPublicIP_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_AFIPOCDCVNET_name')), '/subnets/AFIPOCDCSubnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [],
+                    "appliedDnsServers": [],
+                    "internalDomainNameSuffix": "ze2t1ymduhkutiyp1objxt0dch.dx.internal.cloudapp.net"
+                },
+                "macAddress": "00-0D-3A-3A-B7-BA",
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_AFIPOCDCNSG_name'))]"
+                },
+                "primary": true
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_AFIPOCDCPublicIP_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_AFIPOCDCVNET_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_AFIPOCDCNSG_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Network/networkInterfaces/test2614'.",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('networkInterfaces_test2614_name')]",
+            "apiVersion": "2018-02-01",
+            "location": "westus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "37f56d04-3267-4521-bb73-a64a82f656f8",
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "etag": "W/\"2ade5a75-7acb-4a3c-b1b3-80fa983365d6\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.0.5",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_test2_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_AFIPOCDCVNET_name')), '/subnets/AFIPOCDCSubnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [],
+                    "appliedDnsServers": [],
+                    "internalDomainNameSuffix": "ze2t1ymduhkutiyp1objxt0dch.dx.internal.cloudapp.net"
+                },
+                "macAddress": "00-0D-3A-37-4E-D4",
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_test2_nsg_name'))]"
+                },
+                "primary": true
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_test2_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_AFIPOCDCVNET_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_test2_nsg_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Network/networkSecurityGroups/AFIPOCDCNSG'.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_AFIPOCDCNSG_name')]",
+            "apiVersion": "2018-02-01",
+            "location": "westus",
+            "tags": {
+                "owner": "Bipin Kulkarni"
+            },
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "05d4a27b-2df0-4d0a-8565-62e2338fea5f",
+                "securityRules": [
+                    {
+                        "name": "SecurityCenter-JITRule_1543622207_8A143D02BD8E4A308CEA6574A81E9E23",
+                        "etag": "W/\"dc57aea4-547e-41af-87d0-8e13602a795f\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "ASC JIT Network Access rule for policy 'default' of VM 'AFIPOCDC'.",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "10.0.0.4",
+                            "access": "Deny",
+                            "priority": 1000,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ],
+                "defaultSecurityRules": [
+                    {
+                        "name": "AllowVnetInBound",
+                        "etag": "W/\"dc57aea4-547e-41af-87d0-8e13602a795f\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow inbound traffic from all VMs in VNET",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 65000,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowAzureLoadBalancerInBound",
+                        "etag": "W/\"dc57aea4-547e-41af-87d0-8e13602a795f\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow inbound traffic from azure load balancer",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "AzureLoadBalancer",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 65001,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "DenyAllInBound",
+                        "etag": "W/\"dc57aea4-547e-41af-87d0-8e13602a795f\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Deny all inbound traffic",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 65500,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowVnetOutBound",
+                        "etag": "W/\"dc57aea4-547e-41af-87d0-8e13602a795f\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 65000,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowInternetOutBound",
+                        "etag": "W/\"dc57aea4-547e-41af-87d0-8e13602a795f\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow outbound traffic from all VMs to Internet",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "Internet",
+                            "access": "Allow",
+                            "priority": 65001,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "DenyAllOutBound",
+                        "etag": "W/\"dc57aea4-547e-41af-87d0-8e13602a795f\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Deny all outbound traffic",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 65500,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Network/networkSecurityGroups/test2-nsg'.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_test2_nsg_name')]",
+            "apiVersion": "2018-02-01",
+            "location": "westus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "0266b5ba-b3b7-4019-aa25-9be55d94597e",
+                "securityRules": [],
+                "defaultSecurityRules": [
+                    {
+                        "name": "AllowVnetInBound",
+                        "etag": "W/\"519ef648-132d-4b95-9f90-49277858db19\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow inbound traffic from all VMs in VNET",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 65000,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowAzureLoadBalancerInBound",
+                        "etag": "W/\"519ef648-132d-4b95-9f90-49277858db19\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow inbound traffic from azure load balancer",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "AzureLoadBalancer",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 65001,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "DenyAllInBound",
+                        "etag": "W/\"519ef648-132d-4b95-9f90-49277858db19\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Deny all inbound traffic",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 65500,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowVnetOutBound",
+                        "etag": "W/\"519ef648-132d-4b95-9f90-49277858db19\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 65000,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowInternetOutBound",
+                        "etag": "W/\"519ef648-132d-4b95-9f90-49277858db19\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow outbound traffic from all VMs to Internet",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "Internet",
+                            "access": "Allow",
+                            "priority": 65001,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "DenyAllOutBound",
+                        "etag": "W/\"519ef648-132d-4b95-9f90-49277858db19\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Deny all outbound traffic",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 65500,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Network/publicIPAddresses/AFIPOCDCPublicIP'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "sku": {
+                "name": "Basic",
+                "tier": "Regional"
+            },
+            "name": "[parameters('publicIPAddresses_AFIPOCDCPublicIP_name')]",
+            "apiVersion": "2018-02-01",
+            "location": "westus",
+            "tags": {
+                "owner": "Bipin Kulkarni"
+            },
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "270989df-982b-416c-b1fd-f82191e7f78a",
+                "ipAddress": "40.83.222.176",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4,
+                "ipTags": []
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Network/publicIPAddresses/test2-ip'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "sku": {
+                "name": "Basic",
+                "tier": "Regional"
+            },
+            "name": "[parameters('publicIPAddresses_test2_ip_name')]",
+            "apiVersion": "2018-02-01",
+            "location": "westus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "c37e0390-aa1e-4c1b-b360-6ff7563ba804",
+                "ipAddress": "104.42.220.174",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4,
+                "ipTags": []
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Network/virtualNetworks/AFIPOCDCVNET'.",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('virtualNetworks_AFIPOCDCVNET_name')]",
+            "apiVersion": "2018-02-01",
+            "location": "westus",
+            "tags": {
+                "owner": "Bipin Kulkarni"
+            },
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "e13d39c9-a183-49d5-a30f-db829bcf4317",
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "AFIPOCDCSubnet",
+                        "etag": "W/\"d9cdb8ea-8597-467d-aacd-8154442418d9\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "10.0.0.0/24"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false,
+                "enableVmProtection": false
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/AFIPOC_RG/providers/Microsoft.Storage/storageAccounts/afipocrgdiag123'.",
+            "type": "Microsoft.Storage/storageAccounts",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "name": "[parameters('storageAccounts_afipocrgdiag123_name')]",
+            "apiVersion": "2018-03-01-preview",
+            "location": "westus",
+            "tags": {},
+            "scale": null,
+            "properties": {
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": false,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/afipoc_rg/providers/Microsoft.Network/dnszones/afipocdc.com/NS/@'.",
+            "type": "Microsoft.Network/dnszones/NS",
+            "name": "[concat(parameters('dnszones_afipocdc.com_name'), '/', parameters('NS_@_name'))]",
+            "apiVersion": "2017-10-01",
+            "scale": null,
+            "properties": {
+                "TTL": 172800,
+                "NSRecords": [
+                    {
+                        "nsdname": "ns1-01.azure-dns.com."
+                    },
+                    {
+                        "nsdname": "ns2-01.azure-dns.net."
+                    },
+                    {
+                        "nsdname": "ns3-01.azure-dns.org."
+                    },
+                    {
+                        "nsdname": "ns4-01.azure-dns.info."
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/dnszones', parameters('dnszones_afipocdc.com_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/afipoc_rg/providers/Microsoft.Network/dnszones/afipocdc.com/SOA/@'.",
+            "type": "Microsoft.Network/dnszones/SOA",
+            "name": "[concat(parameters('dnszones_afipocdc.com_name'), '/', parameters('SOA_@_name'))]",
+            "apiVersion": "2017-10-01",
+            "scale": null,
+            "properties": {
+                "TTL": 3600,
+                "SOARecord": {
+                    "email": "azuredns-hostmaster.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "ns1-01.azure-dns.com.",
+                    "minimumTTL": 300,
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/dnszones', parameters('dnszones_afipocdc.com_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b70f6ccc-ecf0-4206-8b3a-7ebcb6e08fc4/resourceGroups/afipoc_rg/providers/Microsoft.Network/dnszones/afipocdc.com/TXT/@'.",
+            "type": "Microsoft.Network/dnszones/TXT",
+            "name": "[concat(parameters('dnszones_afipocdc.com_name'), '/', parameters('TXT_@_name'))]",
+            "apiVersion": "2017-10-01",
+            "scale": null,
+            "properties": {
+                "TTL": 3600,
+                "TXTRecords": [
+                    {
+                        "value": [
+                            "MS=ms17213106"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/dnszones', parameters('dnszones_afipocdc.com_name'))]"
+            ]
+        }
+    ]
+}
