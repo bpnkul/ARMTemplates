@@ -543,9 +543,6 @@
             "type": "Microsoft.Resources/deployments",
             "name": "UpdateVNetDNS",
             "apiVersion": "2016-02-01",
-            "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines/extensions', variables('adVMNameVM1'), 'CreateADForest')]"
-            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
