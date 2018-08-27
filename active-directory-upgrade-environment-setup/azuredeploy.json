@@ -34,7 +34,7 @@
         "metadata": {
           "description": "The location of resources, such as templates and DSC modules, that the template depends on"
         },
-        "defaultValue": "https://raw.githubusercontent.com/bpnkul/ARMTemplates/master/active-directory-upgrade-environment setup"
+        "defaultValue": "https://raw.githubusercontent.com/bpnkul/ARMTemplates/master/active-directory-upgrade-environment-setup"
       },
         "_artifactsLocationSasToken": {
             "type": "securestring",
