@@ -4,6 +4,7 @@
     "parameters": {
       "adminUsername": {
         "type": "string",
+        "defaultValue": "testsystemadmin",
         "metadata": {
           "description": "Username for the Virtual Machine."
         }
@@ -45,14 +46,17 @@
     },
     "variables": {
       "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'sawinvm')]",
-      "nicName": "myVMNic",
       "addressPrefix": "10.0.0.0/16",
-      "subnetName": "Subnet",
+      "subnetName": "testSubnet",
       "subnetPrefix": "10.0.0.0/24",
-      "publicIPAddressName": "myPublicIP",
-      "vmName": "SimpleWinVM",
-      "virtualNetworkName": "MyVNET",
-      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
+      "virtualNetworkName": "testVNET",
+      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]",
+      "nicName1": "testVMNic1",
+      "publicIPAddressName1": "testPublicIP1",
+      "vmName1": "WinDcVM1",
+      "nicName2": "testVMNic2",      
+      "publicIPAddressName2": "testPublicIP2",
+      "vmName2": "WinDcVM2"
     },
     "resources": [
       {
@@ -69,7 +73,19 @@
       {
         "apiVersion": "2016-03-30",
         "type": "Microsoft.Network/publicIPAddresses",
-        "name": "[variables('publicIPAddressName')]",
+        "name": "[variables('publicIPAddressName1')]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2016-03-30",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "[variables('publicIPAddressName2')]",
         "location": "[parameters('location')]",
         "properties": {
           "publicIPAllocationMethod": "Dynamic",
@@ -102,10 +118,10 @@
       {
         "apiVersion": "2016-03-30",
         "type": "Microsoft.Network/networkInterfaces",
-        "name": "[variables('nicName')]",
+        "name": "[variables('nicName1')]",
         "location": "[parameters('location')]",
         "dependsOn": [
-          "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+          "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName1'))]",
           "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
         ],
         "properties": {
@@ -115,7 +131,33 @@
               "properties": {
                 "privateIPAllocationMethod": "Dynamic",
                 "publicIPAddress": {
-                  "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName1'))]"
+                },
+                "subnet": {
+                  "id": "[variables('subnetRef')]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2016-03-30",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[variables('nicName2')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName2'))]",
+          "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName2'))]"
                 },
                 "subnet": {
                   "id": "[variables('subnetRef')]"
@@ -128,18 +170,18 @@
       {
         "apiVersion": "2017-03-30",
         "type": "Microsoft.Compute/virtualMachines",
-        "name": "[variables('vmName')]",
+        "name": "[variables('vmName1')]",
         "location": "[parameters('location')]",
         "dependsOn": [
           "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-          "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+          "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName1'))]"
         ],
         "properties": {
           "hardwareProfile": {
             "vmSize": "Standard_A2"
           },
           "osProfile": {
-            "computerName": "[variables('vmName')]",
+            "computerName": "[variables('vmName1')]",
             "adminUsername": "[parameters('adminUsername')]",
             "adminPassword": "[parameters('adminPassword')]"
           },
@@ -164,7 +206,58 @@
           "networkProfile": {
             "networkInterfaces": [
               {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+                "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName1'))]"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))).primaryEndpoints.blob]"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[variables('vmName2')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName2'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A2"
+          },
+          "osProfile": {
+            "computerName": "[variables('vmName2')]",
+            "adminUsername": "[parameters('adminUsername')]",
+            "adminPassword": "[parameters('adminPassword')]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "[parameters('windowsOSVersion')]",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "diskSizeGB": 1023,
+                "lun": 0,
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName2'))]"
               }
             ]
           },
@@ -176,11 +269,5 @@
           }
         }
       }
-    ],
-    "outputs": {
-      "hostname": {
-        "type": "string",
-        "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
-      }
-    }
+    ]
   }
