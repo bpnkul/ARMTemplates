@@ -2,154 +2,185 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "adminUsername": {
-            "type": "string",
-            "defaultValue": "testsystemadmin",
-            "metadata": {
-                "description": "The name of the administrator account of the new VM and domain"
-            }
-        },
-        "adminPassword": {
-            "type": "string",
-            "defaultValue": "BlackSwan$2067",            
-            "metadata": {
-                "description": "The password for the administrator account of the new VM and domain"
-            }
-        },
-        "domainName": {
-            "type": "string",
-            "defaultValue": "TESTSYS",
-            "metadata": {
-                "description": "The FQDN of the Active Directory Domain to be created"
-            }
-        },
-        "dnsPrefix": {
-            "type": "string",
-            "defaultValue": "t1s",
-            "metadata": {
-                "description": "The DNS prefix for the public IP address used by the Load Balancer"
-            }
-        },
-      "_artifactsLocation": {
+      "adminUsername": {
         "type": "string",
         "metadata": {
-          "description": "The location of resources, such as templates and DSC modules, that the template depends on"
-        },
-        "defaultValue": "https://raw.githubusercontent.com/bpnkul/ARMTemplates/master/active-directory-upgrade-environment-setup"
-      },
-        "_artifactsLocationSasToken": {
-            "type": "securestring",
-            "metadata": {
-                "description": "Auto-generated token to access _artifactsLocation"
-            },
-            "defaultValue": ""
-        },
-        "location": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]",
-            "metadata": {
-                "description": "Location for all resources."
-            }
+          "description": "Username for the Virtual Machine."
         }
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        }
+      },
+      "dnsLabelPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        }
+      },
+      "windowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2016-Datacenter",
+        "allowedValues": [
+          "2008-R2-SP1",
+          "2012-Datacenter",
+          "2012-R2-Datacenter",
+          "2016-Nano-Server",
+          "2016-Datacenter-with-Containers",
+          "2016-Datacenter"
+        ],
+        "metadata": {
+          "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
     },
     "variables": {
-        "virtualNetworkName": "testVNET",
-        "virtualNetworkAddressRange": "10.0.0.0/16",
-        "adNicNameVM1": "testNicVM1",
-        "adNicNameVM2": "testNicVM2",
-        "adNicNameVM3": "testNicVM3",
-        "adNicNameVM4": "testNicVM4",
-        "adNicIPAddressVM1": "10.0.0.4",
-        "adNicIPAddressVM2": "10.0.0.5",
-        "adNicIPAddressVM3": "10.0.0.6",
-        "adNicIPAddressVM4": "10.0.0.7",
-        "adVMNameVM1": "TESTDCVM1",
-        "adVMNameVM2": "TESTDCVM2",
-        "adVMNameVM3": "TESTDCVM3",
-        "adVMNameVM4": "TESTDCVM4",
-        "adSubnetName": "testSubnet",
-        "adSubnetAddressPrefix": "10.0.0.0/24"
+      "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'sawinvm')]",
+      "nicName": "myVMNic",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "publicIPAddressName": "myPublicIP",
+      "vmName": "SimpleWinVM",
+      "virtualNetworkName": "MyVNET",
+      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
     },
     "resources": [
-        {
-            "apiVersion": "2016-02-01",
-            "type": "Microsoft.Resources/deployments",
-            "name": "VNet",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), '/nestedtemplates/vnet.json', parameters('_artifactsLocationSasToken'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "virtualNetworkName": {
-                        "value": "[variables('virtualNetworkName')]"
-                    },
-                    "virtualNetworkAddressRange": {
-                        "value": "[variables('virtualNetworkAddressRange')]"
-                    },
-                    "subnetName": {
-                        "value": "[variables('adSubnetName')]"
-                    },
-                    "subnetRange": {
-                        "value": "[variables('adSubnetAddressPrefix')]"
-                    }
-                }
-            }
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('storageAccountName')]",
+        "apiVersion": "2016-01-01",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "Standard_LRS"
         },
-        {
-            "type": "Microsoft.Network/networkInterfaces",
-            "name": "[variables('adNicNameVM1')]",
-            "apiVersion": "2016-03-30",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/VNet"            
-            ],
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "privateIPAllocationMethod": "Static",
-                            "privateIPAddress": "[variables('adNicIPAddressVM1')]",
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('adSubnetName'))]"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "name": "UpdateVNetDNS",
-            "apiVersion": "2016-02-01",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), '/nestedtemplates/vnet-with-dns-server.json', parameters('_artifactsLocationSasToken'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "virtualNetworkName": {
-                        "value": "[variables('virtualNetworkName')]"
-                    },
-                    "virtualNetworkAddressRange": {
-                        "value": "[variables('virtualNetworkAddressRange')]"
-                    },
-                    "subnetName": {
-                        "value": "[variables('adSubnetName')]"
-                    },
-                    "subnetRange": {
-                        "value": "[variables('adSubnetAddressPrefix')]"
-                    },
-                    "DNSServerAddress": {
-                        "value": [
-                            "[variables('adNicIPAddressVM1')]"
-                        ]
-                    }
-                }
-            }
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2016-03-30",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "[variables('publicIPAddressName')]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+          }
         }
-    ]
-}
+      },
+      {
+        "apiVersion": "2016-03-30",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "[variables('virtualNetworkName')]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "[variables('addressPrefix')]"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "[variables('subnetName')]",
+              "properties": {
+                "addressPrefix": "[variables('subnetPrefix')]"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2016-03-30",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[variables('nicName')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+          "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
+                },
+                "subnet": {
+                  "id": "[variables('subnetRef')]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[variables('vmName')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A2"
+          },
+          "osProfile": {
+            "computerName": "[variables('vmName')]",
+            "adminUsername": "[parameters('adminUsername')]",
+            "adminPassword": "[parameters('adminPassword')]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "[parameters('windowsOSVersion')]",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "diskSizeGB": 1023,
+                "lun": 0,
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))).primaryEndpoints.blob]"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "hostname": {
+        "type": "string",
+        "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
+      }
+    }
+  }
