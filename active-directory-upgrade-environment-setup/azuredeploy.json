@@ -10,7 +10,7 @@
             }
         },
         "adminPassword": {
-            "type": "securestring",
+            "type": "string",
             "defaultValue": "BlackAnaconda$342",
             "metadata": {
                 "description": "The password for the administrator account of the new VM and domain"
@@ -148,9 +148,7 @@
             "name": "UpdateVNetDNS",
             "apiVersion": "2016-02-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/VNet",
-                "Microsoft.Network/networkInterfaces/[variables('adNicNameVM1')]",
-                "Microsoft.Network/networkInterfaces/[variables('adNicNameVM2')]"
+                "Microsoft.Resources/deployments/VNet"
             ], 
             "properties": {
                 "mode": "Incremental",
