@@ -57,13 +57,13 @@
         "ad2008VMName1": "ad2008VM",
         "ad2008PIP1": "ad2008PIP1",
 
-        "ad2012NicName1": "ad2008Nic1",
-        "ad2012NicIP1": "10.0.0.4",
-        "ad2012VMName1": "ad2008VM",
-        "ad2012PIP1": "ad2008PIP1",
+        "ad2012NicName1": "ad2012Nic1",
+        "ad2012NicIP1": "10.0.0.5",
+        "ad2012VMName1": "ad2012VM",
+        "ad2012PIP1": "ad2012PIP1",
 
         "ad2016NicName1": "ad2016Nic1",
-        "ad2016NicIP1": "10.0.0.5",
+        "ad2016NicIP1": "10.0.0.6",
         "ad2016VMName1": "ad2016VM",
         "ad2016PIP1": "ad2016PIP1"
 
