@@ -15,11 +15,13 @@
                 "description": "The password for the administrator account of the new VM and domain"
             }
         },
-        "dnsPrefix": {
+        "dnsPrefixForPublicIP": {
             "type": "string",
-            "defaultValue": "t1s",
+            "minLength": 1,
+            "maxLength": 14,
+            "defaultValue": "dns",
             "metadata": {
-                "description": "The DNS prefix for the public IP address used by the Load Balancer"
+              "description": "Globally unique DNS prefix for the Public IPs used to access the Virtual Machines"
             }
         },
       "_artifactsLocation": {
@@ -109,8 +111,8 @@
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
                     },                                         
-                    "dnsPrefix": {
-                        "value": "[parameters('dnsPrefix')]"
+                    "dnsPrefixForPublicIP": {
+                        "value": "[parameters('dnsPrefixForPublicIP')]"
                     },                
                     "vmNicName": {
                         "value": "[variables('ad2008NicName1')]"

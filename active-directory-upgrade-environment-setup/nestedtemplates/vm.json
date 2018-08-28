@@ -8,7 +8,7 @@
         "adminPassword": {
             "type": "securestring"
         },
-        "dnsPrefix": {
+        "dnsPrefixForPublicIP": {
             "type": "string"
         },    
         "vmNicName": {
@@ -45,7 +45,7 @@
             "properties": {
                 "publicIPAllocationMethod": "Dynamic",
                 "dnsSettings": {
-                    "domainNameLabel": "[concat(parameters('dnsPrefix'), parameters('vmName'))]"
+                    "domainNameLabel": "[concat(parameters('dnsPrefixForPublicIP'), parameters('vmName'))]"
                 }
             }
         },
