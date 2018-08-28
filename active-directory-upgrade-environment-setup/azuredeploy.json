@@ -15,13 +15,6 @@
                 "description": "The password for the administrator account of the new VM and domain"
             }
         },
-        "domainName": {
-            "type": "string",
-            "defaultValue": "TESTSYS",
-            "metadata": {
-                "description": "The FQDN of the Active Directory Domain to be created"
-            }
-        },
         "dnsPrefix": {
             "type": "string",
             "defaultValue": "t1s",
@@ -52,15 +45,22 @@
         }
     },
     "variables": {
-        "virtualNetworkName": "dcVNET",
+        "virtualNetworkName": "adVNET",
         "virtualNetworkAddressRange": "10.0.0.0/16",
-        "subnetName": "testSubnet",
+        "subnetName": "adSubnet",
         "subnetRange": "10.0.0.0/24",
 
-        "adNicName": "testNic",
-        "adNicIPAddress": "10.0.0.4",
-        "adVMName": "testVM",
-        "publicIPAddressName": "testPublicIP"    
+        "ad2008NicName1": "ad2008Nic1",
+        "ad2008NicIP1": "10.0.0.4",
+        "ad2008VMName1": "ad2008VM",
+        "ad2008PIP1": "ad2008PIP1",
+
+
+        "ad2016NicName1": "ad2016Nic1",
+        "ad2016NicIP1": "10.0.0.5",
+        "ad2016VMName": "ad2016VM",
+        "ad2016PIP1": "ad2016PIP1"
+
     },
     "resources": [
          {
@@ -113,16 +113,19 @@
                         "value": "[parameters('dnsPrefix')]"
                     },                
                     "vmNicName": {
-                        "value": "[variables('adNicName')]"
+                        "value": "[variables('ad2008NicName1')]"
                     },                         
                     "vmNicIPAddress": {
-                        "value": "[variables('adNicIPAddress')]"
+                        "value": "[variables('ad2008NicIP1')]"
                     },               
                     "vmName": {
-                        "value": "[variables('adVMName')]"
-                    },       
+                        "value": "[variables('ad2008VMName1')]"
+                    },  
+                    "vmOSProfile": {
+                        "value": "2008-R2-SP1"
+                    },                          
                     "publicIPAddressName": {
-                        "value": "[variables('publicIPAddressName')]"
+                        "value": "[variables('ad2008PIP1')]"
                     },
                     "virtualNetworkName": {
                         "value": "[variables('virtualNetworkName')]"
