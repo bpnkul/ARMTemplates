@@ -1,12 +1,23 @@
+#Set-ExecutionPolicy RemoteSigned
+
 Import-Module ActiveDirectory
+
+New-ADOrganizationalUnit -Name "AllUsers" -Path "DC=TESTSYS,DC=com"
+New-ADOrganizationalUnit -Name "Department0" -Path "ou=AllUsers,DC=TESTSYS,DC=com"
+New-ADOrganizationalUnit -Name "Department1" -Path "ou=AllUsers,DC=TESTSYS,DC=com"
+New-ADOrganizationalUnit -Name "Department2" -Path "ou=AllUsers,DC=TESTSYS,DC=com"
+New-ADOrganizationalUnit -Name "Department3" -Path "ou=AllUsers,DC=TESTSYS,DC=com"
+New-ADOrganizationalUnit -Name "Department4" -Path "ou=AllUsers,DC=TESTSYS,DC=com"
 
  $total = 1000
  for ($userIndex=0; $userIndex -lt $total; $userIndex++) 
  { 
   $userID = "{0:0000}" -f ($userIndex + 1)
   $userName = "test.user$userID"
+  $deptNumber = $userIndex%5
+  $ouPath = "ou=Department$deptNumber,ou=AllUsers,DC=TESTSYS,DC=com"
 
-  Write-Host "Creating user" ($userIndex + 1) "of" $total ":" $userName
+  Write-Host "Creating user" ($userIndex + 1) "of" $total ":" $userName " at : " $ouPath
 
   New-ADUser `
    -AccountPassword (ConvertTo-SecureString "AAaaAAaa11!!11" -AsPlainText -Force) `
@@ -30,7 +41,7 @@ Import-Module ActiveDirectory
    -Office "Office: $userID"`
    -OfficePhone "703-558-$userID" `
    -Organization "Organization" `
-   -Path "OU=AllUsers,DC=TESTSYS,DC=com" `
+   -Path "$ouPath" `
    -POBox "PO Box $userID"`
    -PostalCode $userID `
    -SamAccountName $userName `
