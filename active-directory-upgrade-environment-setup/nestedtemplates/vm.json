@@ -45,7 +45,7 @@
             "properties": {
                 "publicIPAllocationMethod": "Dynamic",
                 "dnsSettings": {
-                    "domainNameLabel": "[parameters('dnsPrefix')]"
+                    "domainNameLabel": "[concat(parameters('dnsPrefix'), parameters('vmName'))]"
                 }
             }
         },
