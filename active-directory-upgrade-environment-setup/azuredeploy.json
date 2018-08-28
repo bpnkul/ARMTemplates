@@ -57,10 +57,14 @@
         "ad2008VMName1": "ad2008VM",
         "ad2008PIP1": "ad2008PIP1",
 
+        "ad2012NicName1": "ad2008Nic1",
+        "ad2012NicIP1": "10.0.0.4",
+        "ad2012VMName1": "ad2008VM",
+        "ad2012PIP1": "ad2008PIP1",
 
         "ad2016NicName1": "ad2016Nic1",
         "ad2016NicIP1": "10.0.0.5",
-        "ad2016VMName": "ad2016VM",
+        "ad2016VMName1": "ad2016VM",
         "ad2016PIP1": "ad2016PIP1"
 
     },
@@ -140,6 +144,106 @@
                     }                   
                 }
             }
-        }       
+        },
+        {
+            "apiVersion": "2016-02-01",
+            "type": "Microsoft.Resources/deployments",
+            "name": "VM2012",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'VNet')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'), '/nestedtemplates/vm.json', parameters('_artifactsLocationSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                         
+                    "dnsPrefixForPublicIP": {
+                        "value": "[parameters('dnsPrefixForPublicIP')]"
+                    },                
+                    "vmNicName": {
+                        "value": "[variables('ad2012NicName1')]"
+                    },                         
+                    "vmNicIPAddress": {
+                        "value": "[variables('ad2012NicIP1')]"
+                    },               
+                    "vmName": {
+                        "value": "[variables('ad2012VMName1')]"
+                    },  
+                    "vmOSProfile": {
+                        "value": "2012-R2-Datacenter"
+                    },                          
+                    "publicIPAddressName": {
+                        "value": "[variables('ad2012PIP1')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[variables('virtualNetworkName')]"
+                    },                           
+                    "subnetName": {
+                        "value": "[variables('subnetName')]"
+                    },                          
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }                   
+                }
+            }
+        } ,
+        {
+            "apiVersion": "2016-02-01",
+            "type": "Microsoft.Resources/deployments",
+            "name": "VM2016",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'VNet')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'), '/nestedtemplates/vm.json', parameters('_artifactsLocationSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                         
+                    "dnsPrefixForPublicIP": {
+                        "value": "[parameters('dnsPrefixForPublicIP')]"
+                    },                
+                    "vmNicName": {
+                        "value": "[variables('ad2016NicName1')]"
+                    },                         
+                    "vmNicIPAddress": {
+                        "value": "[variables('ad2016NicIP1')]"
+                    },               
+                    "vmName": {
+                        "value": "[variables('ad2016VMName1')]"
+                    },  
+                    "vmOSProfile": {
+                        "value": "2016-Datacenter"
+                    },                          
+                    "publicIPAddressName": {
+                        "value": "[variables('ad2016PIP1')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[variables('virtualNetworkName')]"
+                    },                           
+                    "subnetName": {
+                        "value": "[variables('subnetName')]"
+                    },                          
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }                   
+                }
+            }
+        }    
     ]
 }
