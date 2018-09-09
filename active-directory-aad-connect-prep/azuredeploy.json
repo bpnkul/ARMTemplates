@@ -48,7 +48,7 @@
             "metadata": {
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
-            "defaultValue": "https://raw.githubusercontent.com/bpnkul/ARMTemplates/tree/master/active-directory-aad-connect-prep"
+            "defaultValue": "https://raw.githubusercontent.com/bpnkul/ARMTemplates/master/active-directory-aad-connect-prep"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
